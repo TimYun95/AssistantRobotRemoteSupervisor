@@ -20,6 +20,7 @@ using System.Net.Sockets;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Reflection;
+using System.Configuration;
 
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
@@ -49,9 +50,9 @@ namespace AssistantRobotRemoteSupervisor
         }
 
         #region 字段
-        const bool ifAtSamePC = true;
+        const bool ifAtSamePC = false;
         const bool ifAtSameLAN = false;
-        const string netAdapterName = "WLAN 2";
+        string netAdapterName = "unknown";
 
         const string clientIPAtSamePC = "127.0.0.1";
         const int clientPortTCPAtSamePC = 40007;
@@ -126,6 +127,9 @@ namespace AssistantRobotRemoteSupervisor
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
             publicKey = rsa.ToXmlString(false);
             privateKey = rsa.ToXmlString(true);
+
+            // 获得当前网卡名称
+            netAdapterName = ConfigurationManager.AppSettings["netAdapter"];
 
             // 获得当前client的IP地址
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();

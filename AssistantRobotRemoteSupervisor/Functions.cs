@@ -21,6 +21,7 @@ namespace AssistantRobotRemoteSupervisor
         private const string logPath = "Log\\";
         private const string logHistoryPath = "Log\\History\\";
         private const string logConfFilePath = "Log\\Log.config";
+        private const string confFilePath = "NetAdapter.exe.config";
         #endregion
 
         #region 方法
@@ -35,7 +36,6 @@ namespace AssistantRobotRemoteSupervisor
         public static bool CheckEnvironment()
         {
             if (!CheckLogDirectory()) return false;
-            
 
             return true;
         }
@@ -150,36 +150,6 @@ namespace AssistantRobotRemoteSupervisor
             }
         }
 
-        /// <summary>
-        /// EmguCv显示
-        /// </summary>
-        /// <param name="o"></param>
-        /// <returns></returns>
-        [DllImport("gdi32")]
-        private static extern int DeleteObject(IntPtr o);
-
-        /// <summary>
-        /// Convert an IImage to a WPF BitmapSource. The result can be used in the Set Property of Image.Source
-        /// </summary>
-        /// <param name="image">The Emgu CV Image</param>
-        /// <returns>The equivalent BitmapSource</returns>
-        public static BitmapSource ToBitmapSource(IImage image)
-        {
-            BitmapSource bs;
-            using (System.Drawing.Bitmap source = image.Bitmap)
-            {
-                IntPtr ptr = source.GetHbitmap(); //obtain the Hbitmap
-
-                bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
-                    ptr,
-                    IntPtr.Zero,
-                    Int32Rect.Empty,
-                    System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
-
-                DeleteObject(ptr); //release the HBitmap
-            }
-            return bs;
-        }
         #endregion
 
     }
