@@ -1,0 +1,49 @@
+﻿<Controls:MetroWindow x:Class="AssistantRobotRemoteSupervisor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:local="clr-namespace:AssistantRobotRemoteSupervisor"
+        Height="700" 
+        Width="1050" 
+        WindowStartupLocation="CenterScreen" 
+        Cursor="Arrow" 
+        Icon="sjtu64.ico" 
+        ShowCloseButton="True"
+        ShowMaxRestoreButton="True"
+        ShowMinButton="False" 
+        ResizeMode="CanResize" 
+        IsWindowDraggable="True" 
+        ShowSystemMenuOnRightClick="False" 
+        TitlebarHeight="45" 
+        Title="外科手术辅助机器人监控器" 
+		WindowState="Normal" 
+        Loaded="MetroWindow_Loaded" 
+        Closing="MetroWindow_Closing">
+
+    <Controls:MetroWindow.TitleForeground>
+        <SolidColorBrush Color="Black" Opacity="0"/>
+    </Controls:MetroWindow.TitleForeground>
+
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands ShowLastSeparator="False">
+            <TextBlock Text="外科手术辅助机器人监控器" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8 0 8 0"/>
+  
+            <Button x:Name="btnSwitchVideo" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="btnSwitchVideo_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome x:Name="btnIcon" Width="24" Height="24" Kind="PlayCircleRegular" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="btnText" Margin="4 0 0 0" VerticalAlignment="Center" Text="播放监控画面" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
+
+    <Grid x:Name="BaseGrid" Margin="5">
+        <Image x:Name="IBShow" 
+               Height="{Binding ActualHeight, ElementName=BaseGrid, Mode=OneWay}"
+               Width="{Binding ActualWidth, ElementName=BaseGrid, Mode=OneWay}"
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Stretch="Uniform"/>
+    </Grid>
+    
+</Controls:MetroWindow>
