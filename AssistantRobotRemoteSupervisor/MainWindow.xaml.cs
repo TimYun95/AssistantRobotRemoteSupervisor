@@ -50,9 +50,9 @@ namespace AssistantRobotRemoteSupervisor
         }
 
         #region 字段
-        const bool ifAtSamePC = false;
-        const bool ifAtSameLAN = false;
-        string netAdapterName = "unknown";
+        readonly bool ifAtSamePC = true;
+        readonly bool ifAtSameLAN = true;
+        readonly string netAdapterName = "unknown";
 
         const string clientIPAtSamePC = "127.0.0.1";
         const int clientPortTCPAtSamePC = 40007;
@@ -62,37 +62,37 @@ namespace AssistantRobotRemoteSupervisor
         private string clientIPAtSameLAN;
         const int clientPortTCPAtSameLAN = 40005;
         const int clientPortUDPAtSameLAN = 40006;
-        const string serverIPAtSameLAN = "192.168.1.13";
+        readonly string serverIPAtSameLAN = "192.168.1.13";
 
         private string clientIPAtWAN;
         const int clientPortTCPAtWAN = 40005;
         const int clientPortUDPAtWAN = 40006;
-        const string serverIPAtWAN = "202.120.48.24"; // 路由器的公网IP
+        readonly string serverIPAtWAN = "202.120.48.24"; // 路由器的公网IP
 
         const int serverPortTCPAtAll = 40005; // 端口转发应该设置同一端口
         const int serverPortUDPAtAll = 40006; //端口转发应该设置同一端口
 
-        const byte clientDeviceIndex = 1;
+        readonly byte clientDeviceIndex = 1;
         private EndPoint serverEndPoint = new IPEndPoint(0, 0);
 
         private Socket tcpTransferSocket;
         private bool ifTcpConnectionEstablished = false;
-        const int tcpTransferSocketSendTimeOut = 500;
-        const int tcpTransferSocketInterval = 1000;
-        private System.Timers.Timer tcpSendClocker = new System.Timers.Timer(tcpTransferSocketInterval);
+        readonly int tcpTransferSocketSendTimeOut = 500;
+        readonly int tcpTransferSocketInterval = 1000;
+        private System.Timers.Timer tcpSendClocker;
         private Task tcpTransferSendTask;
         private CancellationTokenSource tcpTransferCancel;
         private Queue<VideoTransferProtocolKey> tcpSendQueue = new Queue<VideoTransferProtocolKey>(100);
         private static readonly object queueLocker = new object();
-        const int sleepMsForQueueSend = 10;
+        readonly int sleepMsForQueueSend = 10;
 
         private Socket udpTransferSocket;
         private CancellationTokenSource udpTransferCancel;
         private Task udpTransferRecieveTask;
         private string publicKey;
         private string privateKey;
-        const int udpTransferSocketSendMaxTimeOut = 5000;
-        const int udpTransferSocketSendTimeOut = 3000;
+        readonly int udpTransferSocketSendMaxTimeOut = 5000;
+        readonly int udpTransferSocketSendTimeOut = 3000;
         const int keyLength = 1024;
         const int maxVideoByteLength = 60000;
         private byte lastReceivePackIndex = 0;
@@ -100,13 +100,11 @@ namespace AssistantRobotRemoteSupervisor
         private List<byte[]> bufferReceivePackContent = new List<byte[]>(byte.MaxValue);
         private List<byte> bufferReceivePackNum = new List<byte>(byte.MaxValue);
 
-        private bool ifFindAddress = false;
+        private bool ifAppConfRight = true;
         private bool ifStartVideoShow = false;
-        public delegate void ShowImg(BitmapImage tranferedImg);
-        public delegate void ChangeProperty();
 
-        private const double titleSize = 18;
-        private const double messageSize = 22;
+        private readonly double titleSize = 18;
+        private readonly double messageSize = 22;
         private bool canUseSwitchBtnNow = true;
         private bool existError = false;
         #endregion
@@ -119,7 +117,166 @@ namespace AssistantRobotRemoteSupervisor
             if (!Functions.CheckEnvironment()) return;
             Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor starts with successful checked.");
 
+            // 加载App配置
+            ifAppConfRight = true;
+            bool parseResult = true;
+
+            bool ifAtSamePCTemp;
+            parseResult = bool.TryParse(ConfigurationManager.AppSettings["ifAtSamePC"], out ifAtSamePCTemp);
+            if (parseResult) ifAtSamePC = ifAtSamePCTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "ifAtSamePC" + ") is wrong");
+                return;
+            }
+
+            bool ifAtSameLANTemp;
+            parseResult = bool.TryParse(ConfigurationManager.AppSettings["ifAtSameLAN"], out ifAtSameLANTemp);
+            if (parseResult) ifAtSameLAN = ifAtSameLANTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "ifAtSameLAN" + ") is wrong");
+                return;
+            }
+
+            netAdapterName = ConfigurationManager.AppSettings["netAdapterName"];
+            if (!ifAtSamePC)
+            {
+                parseResult = false;
+                NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface adapter in adapters)
+                {
+                    if (adapter.Name == netAdapterName)
+                    {
+                        UnicastIPAddressInformationCollection unicastIPAddressInformation = adapter.GetIPProperties().UnicastAddresses;
+                        foreach (var item in unicastIPAddressInformation)
+                        {
+                            if (item.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                if (!ifAtSamePC && ifAtSameLAN)
+                                {
+                                    clientIPAtSameLAN = item.Address.ToString();
+                                }
+                                else
+                                {
+                                    clientIPAtWAN = item.Address.ToString();
+                                }
+                                parseResult = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!parseResult)
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "netAdapterName" + ") is wrong");
+                return;
+            }
+
+            string serverIPAtSameLANTemp = ConfigurationManager.AppSettings["serverIPAtSameLAN"];
+            if (new string(serverIPAtSameLANTemp.Take(10).ToArray()) == "192.168.1.") serverIPAtSameLAN = serverIPAtSameLANTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "serverIPAtSameLAN" + ") is wrong");
+                return;
+            }
+
+            string serverIPAtWANTemp = ConfigurationManager.AppSettings["serverIPAtWAN"];
+            if (serverIPAtWANTemp.Trim() == serverIPAtWANTemp) serverIPAtWAN = serverIPAtWANTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "serverIPAtWAN" + ") is wrong");
+                return;
+            }
+
+            byte clientDeviceIndexTemp;
+            parseResult = byte.TryParse(ConfigurationManager.AppSettings["clientDeviceIndex"], out clientDeviceIndexTemp);
+            if (parseResult) clientDeviceIndex = clientDeviceIndexTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "clientDeviceIndex" + ") is wrong");
+                return;
+            }
+
+            int tcpTransferSocketSendTimeOutTemp;
+            parseResult = int.TryParse(ConfigurationManager.AppSettings["tcpTransferSocketSendTimeOut"], out tcpTransferSocketSendTimeOutTemp);
+            if (parseResult) tcpTransferSocketSendTimeOut = tcpTransferSocketSendTimeOutTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "tcpTransferSocketSendTimeOut" + ") is wrong");
+                return;
+            }
+
+            int tcpTransferSocketIntervalTemp;
+            parseResult = int.TryParse(ConfigurationManager.AppSettings["tcpTransferSocketInterval"], out tcpTransferSocketIntervalTemp);
+            if (parseResult) tcpTransferSocketInterval = tcpTransferSocketIntervalTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "tcpTransferSocketInterval" + ") is wrong");
+                return;
+            }
+
+            int udpTransferSocketSendMaxTimeOutTemp;
+            parseResult = int.TryParse(ConfigurationManager.AppSettings["udpTransferSocketSendMaxTimeOut"], out udpTransferSocketSendMaxTimeOutTemp);
+            if (parseResult) udpTransferSocketSendMaxTimeOut = udpTransferSocketSendMaxTimeOutTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "udpTransferSocketSendMaxTimeOut" + ") is wrong");
+                return;
+            }
+
+            int udpTransferSocketSendTimeOutTemp;
+            parseResult = int.TryParse(ConfigurationManager.AppSettings["udpTransferSocketSendTimeOut"], out udpTransferSocketSendTimeOutTemp);
+            if (parseResult) udpTransferSocketSendTimeOut = udpTransferSocketSendTimeOutTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "udpTransferSocketSendTimeOut" + ") is wrong");
+                return;
+            }
+
+            int sleepMsForQueueSendTemp;
+            parseResult = int.TryParse(ConfigurationManager.AppSettings["sleepMsForQueueSend"], out sleepMsForQueueSendTemp);
+            if (parseResult) sleepMsForQueueSend = sleepMsForQueueSendTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "sleepMsForQueueSend" + ") is wrong");
+                return;
+            }
+
+            double titleSizeTemp;
+            parseResult = double.TryParse(ConfigurationManager.AppSettings["titleSize"], out titleSizeTemp);
+            if (parseResult) titleSize = titleSizeTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "titleSize" + ") is wrong");
+                return;
+            }
+
+            double messageSizeTemp;
+            parseResult = double.TryParse(ConfigurationManager.AppSettings["messageSize"], out messageSizeTemp);
+            if (parseResult) messageSize = messageSizeTemp;
+            else
+            {
+                ifAppConfRight = false;
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "messageSize" + ") is wrong");
+                return;
+            }
+
             // 装上TCP定时器
+            tcpSendClocker = new System.Timers.Timer(tcpTransferSocketInterval);
             tcpSendClocker.AutoReset = true;
             tcpSendClocker.Elapsed += tcpSendClocker_Elapsed;
 
@@ -127,43 +284,13 @@ namespace AssistantRobotRemoteSupervisor
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
             publicKey = rsa.ToXmlString(false);
             privateKey = rsa.ToXmlString(true);
-
-            // 获得当前网卡名称
-            netAdapterName = ConfigurationManager.AppSettings["netAdapter"];
-
-            // 获得当前client的IP地址
-            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-
-            foreach (NetworkInterface adapter in adapters)
-            {
-                if (adapter.Name == netAdapterName)
-                {
-                    UnicastIPAddressInformationCollection unicastIPAddressInformation = adapter.GetIPProperties().UnicastAddresses;
-                    foreach (var item in unicastIPAddressInformation)
-                    {
-                        if (item.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                        {
-                            if (!ifAtSamePC && ifAtSameLAN)
-                            {
-                                clientIPAtSameLAN = item.Address.ToString();
-                            }
-                            else
-                            {
-                                clientIPAtWAN = item.Address.ToString();
-                            }
-                            ifFindAddress = true;
-                            break;
-                        }
-                    }
-                }
-            }
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!ifAtSamePC && !ifFindAddress)
+            if (!ifAppConfRight)
             {
-                CloseWindowsLater();
+                ShowCloseMsg("程序配置参数出错，确定关闭程序！", "错误");
                 return;
             }
 
@@ -412,12 +539,13 @@ namespace AssistantRobotRemoteSupervisor
             if (!canUseSwitchBtnNow)
             {
                 this.Dispatcher.BeginInvoke(
-                    new ChangeProperty(BtnEnabled),
+                    new Action(() =>
+                    {
+                        btnSwitchVideo.IsEnabled = true;
+                    }),
                     DispatcherPriority.Normal);
             }
         }
-
-        private void BtnEnabled() { btnSwitchVideo.IsEnabled = true; }
 
         /// <summary>
         /// 解密并显示图像
@@ -450,20 +578,15 @@ namespace AssistantRobotRemoteSupervisor
                 img.Freeze();
 
                 this.Dispatcher.BeginInvoke(
-                    new ShowImg(ShowImgTask),
+                    new Action<BitmapImage>(
+                        (imgSource) =>
+                        {
+                            BitmapFrame imgframe = BitmapFrame.Create(imgSource);
+                            IBShow.Source = imgframe; // Bitmap->Image
+                        }),
                     DispatcherPriority.Normal,
                     new object[] { img });
             }
-        }
-
-        /// <summary>
-        /// UI线程显示图像
-        /// </summary>
-        /// <param name="imgSource">显示的图像</param>
-        private void ShowImgTask(BitmapImage imgSource)
-        {
-            BitmapFrame imgframe = BitmapFrame.Create(imgSource);
-            IBShow.Source = imgframe; // Bitmap->Image
         }
 
         private BitmapImage BitmapToBitmapImage(System.Drawing.Bitmap bitmap)
@@ -515,7 +638,16 @@ namespace AssistantRobotRemoteSupervisor
             udpTransferSocket.Shutdown(SocketShutdown.Both);
             udpTransferSocket.Close();
 
-            if (existError) CloseWindowsLater();
+            ifStartVideoShow = false;
+            this.Dispatcher.BeginInvoke(
+                new Action(() =>
+                {
+                    btnIcon.Kind = MahApps.Metro.IconPacks.PackIconFontAwesomeKind.PlayCircleRegular;
+                    btnText.Text = "播放监控画面";
+                }),
+                DispatcherPriority.Normal);
+
+            if (existError) ShowCloseMsg("网络连接出现位置错误，确定关闭程序！", "错误");
         }
 
         /// <summary>

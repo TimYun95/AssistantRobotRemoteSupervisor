@@ -21,7 +21,6 @@ namespace AssistantRobotRemoteSupervisor
         private const string logPath = "Log\\";
         private const string logHistoryPath = "Log\\History\\";
         private const string logConfFilePath = "Log\\Log.config";
-        private const string confFilePath = "NetAdapter.exe.config";
         #endregion
 
         #region 方法
