@@ -389,10 +389,14 @@ namespace AssistantRobotRemoteSupervisor
                 Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp transfer send cmd '" + waitSentKey.ToString() + "'.");
             }
 
+            Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp transfer stops to send datas.");
+
+            udpTransferRecieveTask.Wait();
+            Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp transfer stops to send datas, and udp stops too.");
+
             FinishAllConnection();
 
             ifTcpConnectionEstablished = false;
-            Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp transfer stops to send datas.");
         }
 
         /// <summary>
@@ -534,6 +538,8 @@ namespace AssistantRobotRemoteSupervisor
 
             if (!canUseSwitchBtnNow)
             {
+                canUseSwitchBtnNow = true;
+
                 this.Dispatcher.BeginInvoke(
                     new Action(() =>
                     {
@@ -640,6 +646,7 @@ namespace AssistantRobotRemoteSupervisor
                 {
                     btnIcon.Kind = MahApps.Metro.IconPacks.PackIconFontAwesomeKind.PlayCircleRegular;
                     btnText.Text = "播放监控画面";
+                    btnSwitchVideo.IsEnabled = true;
                 }),
                 DispatcherPriority.Normal);
 
@@ -723,6 +730,8 @@ namespace AssistantRobotRemoteSupervisor
 
                 btnIcon.Kind = MahApps.Metro.IconPacks.PackIconFontAwesomeKind.PauseCircleRegular;
                 btnText.Text = "停止监控画面";
+
+                canUseSwitchBtnNow = false;
             }
             else
             {
@@ -738,7 +747,6 @@ namespace AssistantRobotRemoteSupervisor
 
             ifStartVideoShow = !ifStartVideoShow;
             btnSwitchVideo.IsEnabled = false;
-            canUseSwitchBtnNow = false;
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
