@@ -377,12 +377,13 @@ namespace AssistantRobotRemoteSupervisor
                     {
                         EndAllLoop();
                         Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp transfer send datas failed.", ex);
+                        break;
                     }
                     else
                     {
                         Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "Not deal exception.", ex);
                         EndAllLoop(false);
-                        return;
+                        break;
                     }
                 }
                 Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp transfer send cmd '" + waitSentKey.ToString() + "'.");
@@ -427,13 +428,13 @@ namespace AssistantRobotRemoteSupervisor
                     {
                         EndAllLoop();
                         Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor udp transfer recieve datas failed.", ex);
-                        return;
+                        break;
                     }
                     else
                     {
                         Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "Not deal exception.", ex);
                         EndAllLoop(false);
-                        return;
+                        break;
                     }
                 }
                 if (!((IPEndPoint)serverEndPoint).Address.Equals(IPAddress.Parse(ifAtSamePC ? serverIPAtSamePC : (ifAtSameLAN ? serverIPAtSameLAN : serverIPAtWAN)))) continue;
