@@ -650,7 +650,7 @@ namespace AssistantRobotRemoteSupervisor
                 }),
                 DispatcherPriority.Normal);
 
-            if (existError) ShowCloseMsg("网络连接出现位置错误，确定关闭程序！", "错误");
+            if (existError) ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
         }
 
         /// <summary>
