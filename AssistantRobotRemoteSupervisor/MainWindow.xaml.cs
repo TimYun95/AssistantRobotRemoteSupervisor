@@ -279,11 +279,6 @@ namespace AssistantRobotRemoteSupervisor
             tcpSendClocker = new System.Timers.Timer(tcpTransferSocketInterval);
             tcpSendClocker.AutoReset = true;
             tcpSendClocker.Elapsed += tcpSendClocker_Elapsed;
-
-            // 获取RSA密钥
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
-            publicKey = rsa.ToXmlString(false);
-            privateKey = rsa.ToXmlString(true);
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
@@ -665,6 +660,11 @@ namespace AssistantRobotRemoteSupervisor
             {
                 // TCP连接已经建立就退出
                 if (ifTcpConnectionEstablished) return;
+
+                // 获取RSA密钥
+                RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
+                publicKey = rsa.ToXmlString(false);
+                privateKey = rsa.ToXmlString(true);
 
                 // 重新建立新的TCP连接
                 tcpTransferSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
