@@ -127,7 +127,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "ifAtSamePC" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "ifAtSamePC" + ") is wrong.");
                 return;
             }
 
@@ -137,7 +137,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "ifAtSameLAN" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "ifAtSameLAN" + ") is wrong.");
                 return;
             }
 
@@ -173,7 +173,7 @@ namespace AssistantRobotRemoteSupervisor
             if (!parseResult)
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "netAdapterName" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "netAdapterName" + ") is wrong.");
                 return;
             }
 
@@ -182,7 +182,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "serverIPAtSameLAN" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "serverIPAtSameLAN" + ") is wrong.");
                 return;
             }
 
@@ -191,7 +191,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "serverIPAtWAN" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "serverIPAtWAN" + ") is wrong.");
                 return;
             }
 
@@ -201,7 +201,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "clientDeviceIndex" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "clientDeviceIndex" + ") is wrong.");
                 return;
             }
 
@@ -211,7 +211,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "tcpTransferSocketSendTimeOut" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "tcpTransferSocketSendTimeOut" + ") is wrong.");
                 return;
             }
 
@@ -221,7 +221,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "tcpTransferSocketInterval" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "tcpTransferSocketInterval" + ") is wrong.");
                 return;
             }
 
@@ -231,7 +231,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "udpTransferSocketSendMaxTimeOut" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "udpTransferSocketSendMaxTimeOut" + ") is wrong.");
                 return;
             }
 
@@ -241,7 +241,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "udpTransferSocketSendTimeOut" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "udpTransferSocketSendTimeOut" + ") is wrong.");
                 return;
             }
 
@@ -251,7 +251,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "sleepMsForQueueSend" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "sleepMsForQueueSend" + ") is wrong.");
                 return;
             }
 
@@ -261,7 +261,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "titleSize" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "titleSize" + ") is wrong.");
                 return;
             }
 
@@ -271,7 +271,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 ifAppConfRight = false;
-                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "messageSize" + ") is wrong");
+                Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "App configuration parameter(" + "messageSize" + ") is wrong.");
                 return;
             }
 
@@ -289,7 +289,14 @@ namespace AssistantRobotRemoteSupervisor
                 return;
             }
 
-            SwitchVideo();
+            AutoConnect();
+        }
+
+        private async void AutoConnect()
+        {
+            int result = SwitchVideo();
+            if (result == -2) await ShowDialog("网络连接失败！", "问题");
+            else if (result == -3) ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
         }
 
         private async void CloseWindowsLater()
@@ -662,12 +669,12 @@ namespace AssistantRobotRemoteSupervisor
             e.Handled = true;
         }
 
-        private void SwitchVideo()
+        private int SwitchVideo()
         {
             if (!ifStartVideoShow)
             {
                 // TCP连接已经建立就退出
-                if (ifTcpConnectionEstablished) return;
+                if (ifTcpConnectionEstablished) return -1;
 
                 // 获取RSA密钥
                 RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(1024);
@@ -689,14 +696,12 @@ namespace AssistantRobotRemoteSupervisor
                     if (ex.SocketErrorCode == SocketError.ConnectionRefused || ex.SocketErrorCode == SocketError.TimedOut)
                     {
                         Logger.HistoryPrinting(Logger.Level.INFO, MethodBase.GetCurrentMethod().DeclaringType.FullName, "AssistantRobot supervisor tcp connection can not established.", ex);
-                        ShowDialog("网络连接失败！\r\n问题：" + ex.Message, "问题");
-                        return;
+                        return -2;
                     }
                     else
                     {
                         Logger.HistoryPrinting(Logger.Level.WARN, MethodBase.GetCurrentMethod().DeclaringType.FullName, "Not deal exception.", ex);
-                        ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
-                        return;
+                        return -3;
                     }
                 }
 
@@ -736,7 +741,7 @@ namespace AssistantRobotRemoteSupervisor
             else
             {
                 // TCP连接未建立就退出
-                if (!ifTcpConnectionEstablished) return;
+                if (!ifTcpConnectionEstablished) return -1;
 
                 // 发送停止接收视频
                 SendCmd(VideoTransferProtocolKey.EndTransferVideo);
@@ -747,6 +752,8 @@ namespace AssistantRobotRemoteSupervisor
 
             ifStartVideoShow = !ifStartVideoShow;
             btnSwitchVideo.IsEnabled = false;
+
+            return 0;
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
