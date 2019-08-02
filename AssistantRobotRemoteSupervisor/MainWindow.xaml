@@ -4,13 +4,13 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:AssistantRobotRemoteSupervisor"
-        Height="700" 
-        Width="1050" 
+        Height="600"
+        Width="1067" 
         WindowStartupLocation="CenterScreen" 
         Cursor="Arrow" 
         Icon="sjtu64.ico" 
-        ShowCloseButton="True"
-        ShowMaxRestoreButton="True"
+        ShowCloseButton="False"
+        ShowMaxRestoreButton="False"
         ShowMinButton="False" 
         ResizeMode="CanResize" 
         IsWindowDraggable="True" 
@@ -18,8 +18,7 @@
         TitlebarHeight="45" 
         Title="外科手术辅助机器人监控器" 
 		WindowState="Normal" 
-        Loaded="MetroWindow_Loaded" 
-        Closing="MetroWindow_Closing">
+        Loaded="MetroWindow_Loaded">
 
     <Controls:MetroWindow.TitleForeground>
         <SolidColorBrush Color="Black" Opacity="0"/>
@@ -28,22 +27,76 @@
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands ShowLastSeparator="False">
             <TextBlock Text="外科手术辅助机器人监控器" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8 0 8 0"/>
-  
+
             <Button x:Name="btnSwitchVideo" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="btnSwitchVideo_Click">
                 <StackPanel Orientation="Horizontal">
                     <iconPacks:PackIconFontAwesome x:Name="btnIcon" Width="24" Height="24" Kind="PlayCircleRegular" VerticalAlignment="Center" HorizontalAlignment="Center" />
                     <TextBlock x:Name="btnText" Margin="4 0 0 0" VerticalAlignment="Center" Text="播放监控画面" HorizontalAlignment="Center" />
                 </StackPanel>
             </Button>
+
+            <Button x:Name="btnSwitchUltra" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="btnSwitchUltra_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome x:Name="btnIconUltra" Width="24" Height="24" Kind="PlayCircleRegular" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="btnTextUltra" Margin="4 0 0 0" VerticalAlignment="Center" Text="打开超声图像" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
 
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands ShowLastSeparator="False" ShowSeparators="False">
+            <Button x:Name="btnEnlarge" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="btnEnlarge_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconOcticons x:Name="enlargeIcon" Width="24" Height="24" Kind="ScreenFull" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="btnPowerOff"  FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="btnPowerOff_Click">
+                <StackPanel Orientation="Horizontal">
+                    <iconPacks:PackIconFontAwesome Width="24" Height="24" Kind="TimesCircleRegular"  VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+
     <Grid x:Name="BaseGrid" Margin="5">
-        <Image x:Name="IBShow" 
-               Height="{Binding ActualHeight, ElementName=BaseGrid, Mode=OneWay}"
-               Width="{Binding ActualWidth, ElementName=BaseGrid, Mode=OneWay}"
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid x:Name="LeftBox" Grid.Row="0" Grid.Column="1" Margin="10">
+            <Image x:Name="ShowBoxLeft"
                HorizontalAlignment="Center" VerticalAlignment="Center"
                Stretch="Uniform"/>
+        </Grid>
+
+        <Grid x:Name="RightBox" Grid.Row="0" Grid.Column="2" Margin="10">
+            <Image x:Name="ShowBoxRight"
+               HorizontalAlignment="Center" VerticalAlignment="Center"
+               Stretch="Uniform"/>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Grid.Column="1"
+   				   Text="现场监控图像" FontSize="36" 
+				   TextAlignment="Center" HorizontalAlignment="Center" 
+				   VerticalAlignment="Center" Foreground="#FF0071BB"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="2"
+   				   Text="超声扫描图像" FontSize="36" 
+				   TextAlignment="Center" HorizontalAlignment="Center" 
+				   VerticalAlignment="Center" Foreground="#FF0071BB"/>
+
     </Grid>
-    
+
 </Controls:MetroWindow>
