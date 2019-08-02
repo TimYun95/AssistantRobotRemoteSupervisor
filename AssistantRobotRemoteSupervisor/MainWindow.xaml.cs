@@ -440,7 +440,6 @@ namespace AssistantRobotRemoteSupervisor
                 result = SwitchVideo(false);
                 if (result == -2)
                 {
-                    autoConnected = false;
                     await this.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         ShowDialog("网络连接失败！", "问题");
@@ -448,7 +447,6 @@ namespace AssistantRobotRemoteSupervisor
                 }
                 else if (result == -3)
                 {
-                    autoConnected = false;
                     await this.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
@@ -456,7 +454,6 @@ namespace AssistantRobotRemoteSupervisor
                 }
                 else if (result == -4)
                 {
-                    autoConnected = false;
                     await this.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
@@ -465,7 +462,6 @@ namespace AssistantRobotRemoteSupervisor
             }
             else if (result == -2)
             {
-                autoConnected = false;
                 await this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     ShowDialog("网络连接失败！", "问题");
@@ -473,7 +469,6 @@ namespace AssistantRobotRemoteSupervisor
             }
             else if (result == -3)
             {
-                autoConnected = false;
                 await this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
@@ -481,12 +476,13 @@ namespace AssistantRobotRemoteSupervisor
             }
             else if (result == -4)
             {
-                autoConnected = false;
                 await this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     ShowCloseMsg("网络连接出现未知错误，确定关闭程序！", "错误");
                 }));
             }
+
+            autoConnected = false;
         }
         private bool autoConnected = false;
         private async void AutoConectShow()
