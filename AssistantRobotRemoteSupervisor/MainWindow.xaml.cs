@@ -1922,11 +1922,15 @@ namespace AssistantRobotRemoteSupervisor
             if (ifTcpConnectionUltraEstablished) EndAllLoopUltra();
             while (ifTcpConnectionUltraEstablished) await Task.Delay(100);
 
-            udpBufferCancel.Cancel();
-            udpBufferWorkTask.Wait();
+            if (!Object.Equals(udpBufferCancel, null))
+                udpBufferCancel.Cancel();
+            if (!Object.Equals(udpBufferWorkTask, null))
+                udpBufferWorkTask.Wait();
 
-            udpBufferUltraCancel.Cancel();
-            udpBufferWorkUltraTask.Wait();
+            if (!Object.Equals(udpBufferUltraCancel, null))
+                udpBufferUltraCancel.Cancel();
+            if (!Object.Equals(udpBufferWorkUltraTask, null))
+                udpBufferWorkUltraTask.Wait();
 
             await controller.CloseAsync();
             this.Close();
